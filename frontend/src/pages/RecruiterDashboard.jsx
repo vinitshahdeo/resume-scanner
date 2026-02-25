@@ -2,31 +2,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { jobsAPI, resumesAPI } from '../services/api';
 
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  description: string;
-  requirements: string[];
-  skills: string[];
-  salaryRange?: string;
-  status: string;
-  createdAt: string;
-}
-
-interface Resume {
-  id: string;
-  title: string;
-  originalName: string;
-  uploadedAt: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
-
 const initialJobForm = {
   title: '',
   company: '',
@@ -39,14 +14,13 @@ const initialJobForm = {
 
 export default function RecruiterDashboard() {
   const { user } = useAuth();
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [resumes, setResumes] = useState<Resume[]>([]);
+  const [jobs, setJobs] = useState([]);
+  const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'jobs' | 'resumes'>('jobs');
+  const [activeTab, setActiveTab] = useState('jobs');
   const [showJobModal, setShowJobModal] = useState(false);
   const [jobForm, setJobForm] = useState(initialJobForm);
   const [submitting, setSubmitting] = useState(false);
-  const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
 
   useEffect(() => {
     loadData();
@@ -67,7 +41,7 @@ export default function RecruiterDashboard() {
     }
   };
 
-  const handleCreateJob = async (e: React.FormEvent) => {
+  const handleCreateJob = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     try {
@@ -91,7 +65,7 @@ export default function RecruiterDashboard() {
     }
   };
 
-  const handleDeleteJob = async (id: string) => {
+  const handleDeleteJob = async (id) => {
     if (!confirm('Are you sure you want to delete this job posting?')) return;
     try {
       await jobsAPI.deleteJob(id);

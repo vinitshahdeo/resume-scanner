@@ -2,34 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { resumesAPI, jobsAPI } from '../services/api';
 
-interface Resume {
-  id: string;
-  title: string;
-  originalName: string;
-  uploadedAt: string;
-}
-
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  description: string;
-  requirements: string[];
-  skills: string[];
-  salaryRange?: string;
-  createdAt: string;
-}
-
 export default function CandidateDashboard() {
   const { user } = useAuth();
-  const [resumes, setResumes] = useState<Resume[]>([]);
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [resumes, setResumes] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'resumes' | 'jobs'>('resumes');
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState('resumes');
+  const [selectedJob, setSelectedJob] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     loadData();
@@ -50,7 +31,7 @@ export default function CandidateDashboard() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -69,7 +50,7 @@ export default function CandidateDashboard() {
     }
   };
 
-  const handleDeleteResume = async (id: string) => {
+  const handleDeleteResume = async (id) => {
     if (!confirm('Are you sure you want to delete this resume?')) return;
     try {
       await resumesAPI.deleteResume(id);

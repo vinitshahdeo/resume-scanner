@@ -1,25 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'candidate' | 'recruiter';
-}
+const AuthContext = createContext(null);
 
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, role: string) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,13 +21,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email, password) => {
     const res = await authAPI.login({ email, password });
     localStorage.setItem('token', res.data.access_token);
     setUser(res.data.user);
   };
 
-  const register = async (email: string, password: string, name: string, role: string) => {
+  const register = async (email, password, name, role) => {
     const res = await authAPI.register({ email, password, name, role });
     localStorage.setItem('token', res.data.access_token);
     setUser(res.data.user);

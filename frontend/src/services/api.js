@@ -20,16 +20,14 @@ api.interceptors.request.use((config) => {
 
 // Auth API
 export const authAPI = {
-  register: (data: { email: string; password: string; name: string; role: string }) =>
-    api.post('/auth/register', data),
-  login: (data: { email: string; password: string }) =>
-    api.post('/auth/login', data),
+  register: (data) => api.post('/auth/register', data),
+  login: (data) => api.post('/auth/login', data),
   getProfile: () => api.get('/auth/profile'),
 };
 
 // Resumes API
 export const resumesAPI = {
-  upload: (file: File, title?: string) => {
+  upload: (file, title) => {
     const formData = new FormData();
     formData.append('file', file);
     if (title) formData.append('title', title);
@@ -39,27 +37,19 @@ export const resumesAPI = {
   },
   getMyResumes: () => api.get('/resumes/my'),
   getAllResumes: () => api.get('/resumes/all'),
-  getResume: (id: string) => api.get(`/resumes/${id}`),
-  deleteResume: (id: string) => api.delete(`/resumes/${id}`),
-  downloadResume: (id: string) => `${API_URL}/resumes/${id}/download`,
+  getResume: (id) => api.get(`/resumes/${id}`),
+  deleteResume: (id) => api.delete(`/resumes/${id}`),
+  downloadResume: (id) => `${API_URL}/resumes/${id}/download`,
 };
 
 // Jobs API
 export const jobsAPI = {
-  create: (data: {
-    title: string;
-    company: string;
-    location: string;
-    description: string;
-    requirements: string[];
-    skills?: string[];
-    salaryRange?: string;
-  }) => api.post('/jobs', data),
+  create: (data) => api.post('/jobs', data),
   getAll: () => api.get('/jobs'),
   getMyJobs: () => api.get('/jobs/recruiter/my'),
-  getJob: (id: string) => api.get(`/jobs/${id}`),
-  updateJob: (id: string, data: any) => api.put(`/jobs/${id}`, data),
-  deleteJob: (id: string) => api.delete(`/jobs/${id}`),
+  getJob: (id) => api.get(`/jobs/${id}`),
+  updateJob: (id, data) => api.put(`/jobs/${id}`, data),
+  deleteJob: (id) => api.delete(`/jobs/${id}`),
 };
 
 export default api;
